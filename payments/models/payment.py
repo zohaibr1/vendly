@@ -3,7 +3,7 @@ from decimal   import   Decimal
 from vendors.models import VendorProfile
 class Payment(models.Model):
     order=models.ForeignKey('orders.OrderItem',related_name="payment", on_delete=models.CASCADE)
-    vendor = models.ForeignKey("vendors.VendorProfile", on_delete=models.CASCADE, related_name="payments")
+    # vendor = models.ForeignKey("vendors.VendorProfile", on_delete=models.CASCADE, related_name="payments")
     PAYMENT_METHOD= [("STRIPE","stripe"),("PAYPAL","paypal"),("COD","cash on delivery")]
     STATUS_CHOICE= [("PENDING","pending"),("SUCCESS","success"),("FAILED","failed")]
     payment_method= models.CharField(max_length=20, choices=PAYMENT_METHOD, default="STRIPE")

@@ -40,7 +40,7 @@ class User(AbstractUser):
         ("admin", "Admin"),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="customer")
-
+    vendor_approved = models.BooleanField(default=False)
     # Attach manager
     objects = UserManager()
 
