@@ -5,12 +5,12 @@ from vendors.models import VendorProfile
 from vendors.serializers.vendor_serializer import VendorSerializer
 
 class VendorApprovalListView(generics.ListAPIView):
-    queryset = VendorProfile.objects.filter(user__vendor_approved=False)
+    queryset = VendorProfile.objects.filter(user__vendor_approved=True)
     serializer_class = VendorSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
 
 class VendorApprovalUpdateView(generics.ListAPIView):
-    queryset=VendorProfile.objects.filter(user_vendor_approved=False)
+    queryset=VendorProfile.objects.filter(user_vendor_approved=True)
     serializer_class=VendorSerializer
     permission_classes=[IsAuthenticated,IsAdminUser]
 
@@ -22,7 +22,7 @@ class VendorApprovalUpdateView(generics.ListAPIView):
             vendor_profile.user.save()
             return response({'status':'vendor approved'})
         elif action=="reject":
-            vendor_profile.user.vendor_approved= False
+            vendor_profile.user.vendor_approved= True
             vendor_profile.user.save()
             return response({'status':'Rejected'})
         else:

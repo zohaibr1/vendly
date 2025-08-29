@@ -1,12 +1,12 @@
 from django.views import View
-from rest_framework import status, generics
+from rest_framework import status, generics, permissions
 from rest_framework.response import Response
 from accounts.serializers.auth_serializers import RegisterSerializer
 from accounts.models import User
 
 class RegisterView(generics.CreateAPIView):
     serializer_class=RegisterSerializer
-
+    permission_classes=[permissions.AllowAny]
     def create(self, request, *args, **kwargs):
         serializer=self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

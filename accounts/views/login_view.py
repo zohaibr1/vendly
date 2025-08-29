@@ -1,10 +1,10 @@
-from django.contrib.auth import authenticate
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status, permissions
-from rest_framework_simplejwt.tokens import RefreshToken
-from accounts.serializers.auth_serializers import LoginSerializer
-from accounts.serializers.user_serializers import UserSerializer
+from django.contrib.auth                    import authenticate
+from rest_framework.views                   import APIView
+from rest_framework.response                import Response
+from rest_framework                         import status, permissions
+from rest_framework_simplejwt.tokens        import RefreshToken
+from accounts.serializers.auth_serializers  import LoginSerializer
+from accounts.serializers.user_serializers  import UserSerializer
 
 class LoginView(APIView):
     permission_classes=[permissions.AllowAny]
@@ -12,8 +12,8 @@ class LoginView(APIView):
     def post(self, request):
         serializer=LoginSerializer(data=request.data)
         if serializer.is_valid():
-            username=serializer._validated_data['username']
-            password=serializer._validated_data['password']
+            username=serializer.validated_data['username']
+            password=serializer.validated_data['password']
 
             user=authenticate(username=username, password=password)
             if user:

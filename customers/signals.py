@@ -4,7 +4,7 @@ from django.conf import settings
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_customer_profile(sender, instance, created, **kwargs):
-    # Only create profile for customers (not vendors/admins)
-    if created and getattr(instance, "role", None) == "CUSTOMER":
+    role = getattr(instance, "role", None)
+    if created and role and role.upper() == "CUSTOMER":
         from .models import CustomerProfile
         CustomerProfile.objects.create(user=instance)

@@ -6,18 +6,14 @@ from django.utils.text import slugify
 class Product(models.Model):
     vendor = models.ForeignKey("vendors.VendorProfile", on_delete=models.CASCADE, related_name="products")
     category = models.ForeignKey("products.Category", on_delete=models.SET_NULL, null=True, blank=True, related_name="products")
-
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(blank=True)
-
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     stock = models.PositiveIntegerField(default=0)
-
     offer = models.PositiveIntegerField(default=0, help_text="Discount percentage (0–100)")
     is_active = models.BooleanField(default=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
