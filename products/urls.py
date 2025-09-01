@@ -11,5 +11,4 @@ urlpatterns = [
     path("products/<int:pk>/upload-image/", ProductImageUploadView.as_view(), name="product-upload-image"),
     path("products/<int:pk>/update-image/", ProductImageUpdateView.as_view(), name="product-update-image"),
     path("products/<int:pk>/delete-image/", ProductImageDeleteView.as_view(), name="product-delete-image"),
-
 ]
