@@ -19,13 +19,10 @@ class CheckoutView(APIView):
             return Response({"details":"Cart is empty. "},status=status.HTTP_400_BAD_REQUEST)
         
         shipping_id=request.data.get('shipping_address_id')
-        if shipping_id:
-            shipping_address=get_object_or_404(ShippingAddress, id=shipping_id, user=user)
-        else:
-            shipping_address=ShippingAddress.objects.filter(user=user, is_default=True).first()
-            if not shipping_address:
-                return Response({"error":"Shipping Address Required!"},status=status.HTTP_400_BAD_REQUEST)
-            
+        try:
+            shipping_address=ShippingAddress.objects.get(id=shipping_id, user=user)
+        except ShippingAddress.DoesNotExist:
+            return Response({"details":"Invalid Shipping Address"},status=status.HTTP_400_BAD_REQUEST)
         order=Order.objects.create(customer=user, address=shipping_address.address, city=shipping_address.city,postal_code=shipping_address.postal_code, country=shipping_address.country, phone=shipping_address.phone)
         
         for item in cart.items.all():

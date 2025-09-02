@@ -2,7 +2,7 @@ from django.db import   models
 from decimal   import   Decimal
 from vendors.models import VendorProfile
 class Payment(models.Model):
-    order=models.ForeignKey('orders.OrderItem',related_name="payment", on_delete=models.CASCADE)
+    order=models.ForeignKey('orders.Order',related_name="payment", on_delete=models.CASCADE)
     # vendor = models.ForeignKey("vendors.VendorProfile", on_delete=models.CASCADE, related_name="payments")
     PAYMENT_METHOD= [("STRIPE","stripe"),("PAYPAL","paypal"),("COD","cash on delivery")]
     STATUS_CHOICE= [("PENDING","pending"),("SUCCESS","success"),("FAILED","failed")]
@@ -23,6 +23,13 @@ class Payment(models.Model):
             self.admin_commission = (self.amount * Decimal("0.01")).quantize(Decimal("0.01"))
             self.vendor_amount = self.amount - self.admin_commission
         super().save(*args, **kwargs)
+        if self.status == "SUCCESS":
+            self.order.status = "processing"
+            self.order.save(update_fields=["status"])
+        elif self.status == "FAILED":
+            self.order.status = "cancelled"
+            self.order.save(update_fields=["status"])
+   
     @property
     def refunded_amount(self):
         """Sum of all approved refunds"""
@@ -34,4 +41,4 @@ class Payment(models.Model):
         return self.vendor_amount - self.refunded_amount
 
     def __str__(self):
-        return f"Payment {self.id} - Vendor: {self.vendor} - Net: {self.final_vendor_amount} - Order {self.order} - Status {self.status}"
+        return f"Payment {self.id} - Net: {self.final_vendor_amount} - Order {self.order} - Status {self.status}"
